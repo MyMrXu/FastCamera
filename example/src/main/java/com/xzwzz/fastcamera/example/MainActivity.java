@@ -1,15 +1,19 @@
 package com.xzwzz.fastcamera.example;
 
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.xzwzz.fastcamera.FastCamera;
 import com.xzwzz.fastcamera.callback.CameraCallback;
+import com.xzwzz.fastcamera.util.UriUtils;
 
 
 /**
@@ -20,6 +24,8 @@ import com.xzwzz.fastcamera.callback.CameraCallback;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button mBtnGetPhoto;
     private Button mBtnGetZoom;
+    private ImageView resuleImageView;
+    private Uri uri = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         mBtnGetPhoto = (Button) findViewById(R.id.btn_get_photo);
+        resuleImageView = (ImageView) findViewById(R.id.iv_photo);
         mBtnGetZoom = (Button) findViewById(R.id.btn_get_zoom);
 
         mBtnGetPhoto.setOnClickListener(this);
@@ -40,10 +47,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_get_photo:
-                FastCamera.requestCamera(this, Environment.getExternalStorageDirectory() + "/image.jpg", new CameraCallback() {
+                FastCamera.requestCamera(this, new CameraCallback() {
                     @Override
-                    public void onSuccess(String url) {
-                        Log.e("xzwzz", "onSuccess: " + url);
+                    public void onSuccess(Uri u) {
+                        Log.e("xzwzz", "onSuccess: " + u);
+                        uri = u;
+                        Log.e("xzwzz", "onSuccess: " + UriUtils.uri2File(MainActivity.this, u));
+                        resuleImageView.setImageURI(u);
                     }
 
                     @Override
@@ -53,10 +63,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.btn_get_zoom:
-                FastCamera.requestZoom(this, Environment.getExternalStorageDirectory() + "/image.jpg", new CameraCallback() {
+                if (uri == null) {
+                    return;
+                }
+                FastCamera.requestZoom(this, uri, new CameraCallback() {
                     @Override
-                    public void onSuccess(String url) {
-                        Log.e("xzwzz", "onSuccess: " + url);
+                    public void onSuccess(Uri url) {
+                        resuleImageView.setImageURI(url);
+                        Log.e("xzwzz", "onSuccess: " + UriUtils.uri2File(MainActivity.this, url));
                     }
 
                     @Override

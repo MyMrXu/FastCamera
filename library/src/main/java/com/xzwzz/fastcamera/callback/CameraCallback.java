@@ -1,5 +1,7 @@
 package com.xzwzz.fastcamera.callback;
 
+import android.net.Uri;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ public interface CameraCallback {
     /**
      * 权限允许
      */
-    void onSuccess(String url);
+    void onSuccess(Uri fileUri);
 
     /**
      * 权限拒绝

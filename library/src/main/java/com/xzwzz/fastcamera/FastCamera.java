@@ -1,7 +1,9 @@
 package com.xzwzz.fastcamera;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
+import android.net.Uri;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.xzwzz.fastcamera.callback.CameraCallback;
 import com.xzwzz.fastcamera.delegate.CameraDelegateFinder;
@@ -21,20 +23,20 @@ public class FastCamera {
     }
 
 
-    public static void requestCamera(Context context, String saveUrl, CameraCallback callback) {
+    public static void requestCamera(Context context, CameraCallback callback) {
         if (context instanceof FragmentActivity) {
             CameraDelegateFragment delegate = findDelegate((FragmentActivity) context);
             if (delegate != null) {
-                delegate.requestCamera(context, 0, requestCode++, saveUrl, callback);
+                delegate.requestCamera(context, 0, requestCode++, null, callback);
             }
         }
     }
 
-    public static void requestZoom(Context context, String saveUrl, CameraCallback callback) {
+    public static void requestZoom(Context context, Uri uri, CameraCallback callback) {
         if (context instanceof FragmentActivity) {
             CameraDelegateFragment delegate = findDelegate((FragmentActivity) context);
             if (delegate != null) {
-                delegate.requestCamera(context, 1, requestCode++, saveUrl, callback);
+                delegate.requestCamera(context, 1, requestCode++, uri, callback);
             }
         }
     }
