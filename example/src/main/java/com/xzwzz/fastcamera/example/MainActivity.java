@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FastCamera.requestCamera(this, new CameraCallback() {
                     @Override
                     public void onSuccess(Uri u) {
-                        Log.e("xzwzz", "onSuccess: " + u);
                         uri = u;
-                        Log.e("xzwzz", "onSuccess: " + UriUtils.uri2File(MainActivity.this, u));
                         resuleImageView.setImageURI(u);
                     }
 
@@ -70,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onSuccess(Uri url) {
                         resuleImageView.setImageURI(url);
-                        Log.e("xzwzz", "onSuccess: " + UriUtils.uri2File(MainActivity.this, url));
                     }
 
                     @Override

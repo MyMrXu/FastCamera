@@ -96,7 +96,6 @@ public class CameraDelegateFragment extends Fragment implements LifecycleObserve
         // 判断是否有相机
         if (captureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             mCameraUri = buildOutputUri();
-            Log.e("xzwzz", "buildOutputUri: " + mCameraUri.getPath());
             if (mCameraUri != null) {
                 captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraUri);
                 captureIntent.putExtra("return-data", true);
@@ -117,7 +116,6 @@ public class CameraDelegateFragment extends Fragment implements LifecycleObserve
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.e("xzwzz", "buildOutputUri: " + photoFile.getAbsolutePath());
             if (photoFile != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     //适配Android 7.0文件权限，通过FileProvider创建一个content类型的Uri
