@@ -3,8 +3,8 @@
 
     <application>
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.xzwzz.fastcamera.example.fileprovider"
+            android:name=".XFileProvider"
+            android:authorities="${applicationId}.camera.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
