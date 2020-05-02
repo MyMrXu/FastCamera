@@ -46,17 +46,14 @@ class CameraUtils {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
-        File file = CameraUriUtils.uri2File(context, outputUri);
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
 
         // 设置裁剪
         intent.putExtra("crop", "true");
         // aspectX aspectY 是宽高的比例
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
+        intent.putExtra("xzwzz_url", uri);
         // outputX outputY 是裁剪图片宽高
         intent.putExtra("outputX", 512);
         intent.putExtra("outputY", 512);
@@ -88,6 +85,17 @@ class CameraUtils {
         }
 //        }
         return photoUri;
+    }
+
+    public static Uri buildZoomOutputUri(Context context) {
+        File photoFile = null;
+        try {
+            photoFile = createImageFile(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Uri.fromFile(photoFile);
     }
 
     private static Uri createImageUri(Context context) {
