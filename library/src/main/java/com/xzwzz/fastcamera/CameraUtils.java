@@ -47,6 +47,9 @@ class CameraUtils {
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
         File file = CameraUriUtils.uri2File(context, outputUri);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 
         // 设置裁剪
