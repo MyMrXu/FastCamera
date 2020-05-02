@@ -73,16 +73,15 @@ public final class CameraDelegateFragment extends Fragment implements LifecycleO
     private Uri mCameraUri;
 
     public void requestCamera(final Context context, final int type, final int request_code, final Uri uri, final CameraCallback callback) {
+        mCameraUri = CameraUtils.buildOutputUri(context);
         pushStack(RequestEntry.newBuilder().withCallback(callback).withRunnable(new Runnable() {
             @Override
             public void run() {
                 try {
                     if (type == CAMERA) {
-                        mCameraUri = CameraUtils.buildOutputUri(context);
                         startActivityForResult(CameraUtils.createCamreaIntent(mCameraUri, context), request_code);
                     } else if (type == ZOOM) {
-                        mCameraUri = uri;
-                        startActivityForResult(CameraUtils.createZoomIntent(uri, context), request_code);
+                        startActivityForResult(CameraUtils.createZoomIntent(uri, mCameraUri, context), request_code);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -37,7 +37,7 @@ class CameraUtils {
         return null;
     }
 
-    public static Intent createZoomIntent(Uri uri, Context context) throws Exception {
+    public static Intent createZoomIntent(Uri uri, Uri outputUri, Context context) throws Exception {
         Log.d("xzwzz", "createZoomIntent: " + uri + "\n" + uri);
         //设置Intent
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -46,7 +46,7 @@ class CameraUtils {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
-        File file = CameraUriUtils.uri2File(context, uri);
+        File file = CameraUriUtils.uri2File(context, outputUri);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 
         // 设置裁剪
