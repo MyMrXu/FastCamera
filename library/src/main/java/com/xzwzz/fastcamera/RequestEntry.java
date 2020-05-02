@@ -1,4 +1,4 @@
-package com.xzwzz.fastcamera.entity;
+package com.xzwzz.fastcamera;
 
 
 import com.xzwzz.fastcamera.callback.CameraCallback;
@@ -8,7 +8,7 @@ import com.xzwzz.fastcamera.callback.CameraCallback;
  * @time 2019-11-19
  * @package com.fc62.raisebook.videolive.image.entity
  */
-public class RequestEntry {
+class RequestEntry {
     private CameraCallback callback;
     private Runnable runnable;
     private int requestCode;

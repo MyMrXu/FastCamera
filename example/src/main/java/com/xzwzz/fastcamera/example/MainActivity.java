@@ -2,18 +2,17 @@ package com.xzwzz.fastcamera.example;
 
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.xzwzz.fastcamera.CameraUriUtils;
 import com.xzwzz.fastcamera.FastCamera;
 import com.xzwzz.fastcamera.callback.CameraCallback;
-import com.xzwzz.fastcamera.util.UriUtils;
 
 
 /**
@@ -35,9 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        mBtnGetPhoto = (Button) findViewById(R.id.btn_get_photo);
-        resuleImageView = (ImageView) findViewById(R.id.iv_photo);
-        mBtnGetZoom = (Button) findViewById(R.id.btn_get_zoom);
+        mBtnGetPhoto = findViewById(R.id.btn_get_photo);
+        resuleImageView = findViewById(R.id.iv_photo);
+        mBtnGetZoom = findViewById(R.id.btn_get_zoom);
 
         mBtnGetPhoto.setOnClickListener(this);
         mBtnGetZoom.setOnClickListener(this);
@@ -52,11 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onSuccess(Uri u) {
                         uri = u;
                         resuleImageView.setImageURI(u);
+//                        BitmapFactory.decodeFile(CameraUriUtils.uri2File(MainActivity.this,u).getAbsolutePath());
+                        Log.e("xzwzz", "onSuccess capture: " + CameraUriUtils.uri2File(MainActivity.this, u).getAbsolutePath());
                     }
 
                     @Override
                     public void onFailed() {
-
+                        Log.e("xzwzz", "onFailed: 失败");
                     }
                 });
                 break;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FastCamera.requestZoom(this, uri, new CameraCallback() {
                     @Override
                     public void onSuccess(Uri url) {
+                        Log.e("xzwzz", "onSuccess zoom: " + CameraUriUtils.uri2File(MainActivity.this, url).getAbsolutePath());
+                        resuleImageView.setImageResource(0);
                         resuleImageView.setImageURI(url);
                     }
 

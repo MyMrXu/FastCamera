@@ -1,4 +1,4 @@
-package com.xzwzz.fastcamera.util;
+package com.xzwzz.fastcamera;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -28,9 +28,9 @@ import java.lang.reflect.Method;
  *     desc  : utils about uri
  * </pre>
  */
-public final class UriUtils {
+public final class CameraUriUtils {
 
-    private UriUtils() {
+    private CameraUriUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
@@ -68,26 +68,52 @@ public final class UriUtils {
      * @return file
      */
     public static File uri2File(Context context, @NonNull final Uri uri) {
-        Log.d("UriUtils", uri.toString());
+        Log.d("CameraUriUtils", uri.toString());
         String authority = uri.getAuthority();
         String scheme = uri.getScheme();
         String path = uri.getPath();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && path != null) {
+            File file = null;
+            if (path.startsWith("/external_files_path/")) {
+                file = new File(context.getExternalFilesDir("").getAbsolutePath()
+                        , path.replace("/external_files_path/", ""));
+            } else if (path.startsWith("/external_cache_path/")) {
+                file = new File(context.getExternalCacheDir().getAbsolutePath()
+                        , path.replace("/external_cache_path/", ""));
+            } else {
+
+            }
+            if (file.exists()) {
+                Log.d("xzwzz", "uri2File: parse success,path:" + file.getAbsolutePath());
+                return file;
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && path != null) {
-            String[] externals = new String[]{"/external", "/external_path", "/capture_files", "/internal_files", "/external_files"};
-            for (String external : externals) {
-                if (path.startsWith(external + "/")) {
-                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                            + path.replace(external, ""));
-                    if (file.exists()) {
-                        Log.d("UriUtils", uri.toString() + " -> " + external);
-                        return file;
-                    }
-                }
+            File file = null;
+            if (path.startsWith("/external_files_path/")) {
+                file = new File(context.getExternalFilesDir("").getAbsolutePath()
+                        , path.replace("/external_files_path/", ""));
+            } else if (path.startsWith("/external_cache_path/")) {
+                file = new File(context.getExternalCacheDir().getAbsolutePath()
+                        , path.replace("/external_cache_path/", ""));
+            } else if (path.startsWith("/files_path/")) {
+                file = new File(context.getFilesDir().getAbsolutePath()
+                        , path.replace("/files_path/", ""));
+            } else if (path.startsWith("/cache_path/")) {
+                file = new File(context.getCacheDir().getAbsolutePath()
+                        , path.replace("/cache_path/", ""));
+            } else if (path.startsWith("/external_path/")) {
+                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+                        , path.replace("/external_path/", ""));
+            }
+            if (file.exists()) {
+                Log.d("xzwzz", "uri2File: parse success,path:" + file.getAbsolutePath());
+                return file;
             }
         }
         if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             if (path != null) return new File(path);
-            Log.d("UriUtils", uri.toString() + " parse failed. -> 0");
+            Log.d("CameraUriUtils", uri.toString() + " parse failed. -> 0");
             return null;
         }// end 0
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
@@ -137,10 +163,10 @@ public final class UriUtils {
                             }
                         }
                     } catch (Exception ex) {
-                        Log.d("UriUtils", uri.toString() + " parse failed. " + ex.toString() + " -> 1_0");
+                        Log.d("CameraUriUtils", uri.toString() + " parse failed. " + ex.toString() + " -> 1_0");
                     }
                 }
-                Log.d("UriUtils", uri.toString() + " parse failed. -> 1_0");
+                Log.d("CameraUriUtils", uri.toString() + " parse failed. -> 1_0");
                 return null;
             }// end 1_0
             else if ("com.android.providers.downloads.documents".equals(authority)) {
@@ -158,7 +184,7 @@ public final class UriUtils {
                         }
                     }
                 }
-                Log.d("UriUtils", uri.toString() + " parse failed. -> 1_1");
+                Log.d("CameraUriUtils", uri.toString() + " parse failed. -> 1_1");
                 return null;
             }// end 1_1
             else if ("com.android.providers.media.documents".equals(authority)) {
@@ -173,7 +199,7 @@ public final class UriUtils {
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 } else {
-                    Log.d("UriUtils", uri.toString() + " parse failed. -> 1_2");
+                    Log.d("CameraUriUtils", uri.toString() + " parse failed. -> 1_2");
                     return null;
                 }
                 final String selection = "_id=?";
@@ -184,7 +210,7 @@ public final class UriUtils {
                 return getFileFromUri(context, uri, "1_3");
             }// end 1_3
             else {
-                Log.d("UriUtils", uri.toString() + " parse failed. -> 1_4");
+                Log.d("CameraUriUtils", uri.toString() + " parse failed. -> 1_4");
                 return null;
             }// end 1_4
         }// end 1
@@ -192,7 +218,7 @@ public final class UriUtils {
             return getFileFromUri(context, uri, "2");
         }// end 2
         else {
-            Log.d("UriUtils", uri.toString() + " parse failed. -> 3");
+            Log.d("CameraUriUtils", uri.toString() + " parse failed. -> 3");
             return null;
         }// end 3
     }
@@ -213,14 +239,14 @@ public final class UriUtils {
             String path = uri.getPath();
             if (!TextUtils.isEmpty(path)) {
                 File fileDir = Environment.getExternalStorageDirectory();
-                return new File(fileDir, path.substring("/QQBrowser".length(), path.length()));
+                return new File(fileDir, path.substring("/QQBrowser".length()));
             }
         }
 
         final Cursor cursor = context.getContentResolver().query(
                 uri, new String[]{"_data"}, selection, selectionArgs, null);
         if (cursor == null) {
-            Log.d("UriUtils", uri.toString() + " parse failed(cursor is null). -> " + code);
+            Log.d("CameraUriUtils", uri.toString() + " parse failed(cursor is null). -> " + code);
             return null;
         }
         try {
@@ -229,15 +255,15 @@ public final class UriUtils {
                 if (columnIndex > -1) {
                     return new File(cursor.getString(columnIndex));
                 } else {
-                    Log.d("UriUtils", uri.toString() + " parse failed(columnIndex: " + columnIndex + " is wrong). -> " + code);
+                    Log.d("CameraUriUtils", uri.toString() + " parse failed(columnIndex: " + columnIndex + " is wrong). -> " + code);
                     return null;
                 }
             } else {
-                Log.d("UriUtils", uri.toString() + " parse failed(moveToFirst return false). -> " + code);
+                Log.d("CameraUriUtils", uri.toString() + " parse failed(moveToFirst return false). -> " + code);
                 return null;
             }
         } catch (Exception e) {
-            Log.d("UriUtils", uri.toString() + " parse failed. -> " + code);
+            Log.d("CameraUriUtils", uri.toString() + " parse failed. -> " + code);
             return null;
         } finally {
             cursor.close();

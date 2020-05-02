@@ -6,8 +6,6 @@ import android.net.Uri;
 import androidx.fragment.app.FragmentActivity;
 
 import com.xzwzz.fastcamera.callback.CameraCallback;
-import com.xzwzz.fastcamera.delegate.CameraDelegateFinder;
-import com.xzwzz.fastcamera.delegate.CameraDelegateFragment;
 
 
 /**

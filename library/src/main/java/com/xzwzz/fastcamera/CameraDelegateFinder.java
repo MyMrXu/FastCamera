@@ -1,4 +1,4 @@
-package com.xzwzz.fastcamera.delegate;
+package com.xzwzz.fastcamera;
 
 
 import androidx.fragment.app.FragmentActivity;
@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
  * @time 2019-11-19
  * @package com.fc62.raisebook.videolive.image.delegate
  */
-public class CameraDelegateFinder {
+class CameraDelegateFinder {
     private static final String DELEGATE_FRAGMENT_TAG = CameraDelegateFragment.class.getSimpleName() + "Tag";
 
     private static class Singleton {
