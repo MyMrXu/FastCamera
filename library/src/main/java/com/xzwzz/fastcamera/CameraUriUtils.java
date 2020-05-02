@@ -81,9 +81,9 @@ public final class CameraUriUtils {
                 file = new File(context.getExternalCacheDir().getAbsolutePath()
                         , path.replace("/external_cache_path/", ""));
             } else {
-
+                
             }
-            if (file.exists()) {
+            if (file != null && file.exists()) {
                 Log.d("xzwzz", "uri2File: parse success,path:" + file.getAbsolutePath());
                 return file;
             }
@@ -106,7 +106,7 @@ public final class CameraUriUtils {
                 file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
                         , path.replace("/external_path/", ""));
             }
-            if (file.exists()) {
+            if (file != null && file.exists()) {
                 Log.d("xzwzz", "uri2File: parse success,path:" + file.getAbsolutePath());
                 return file;
             }
